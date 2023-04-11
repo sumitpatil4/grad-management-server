@@ -2,6 +2,7 @@ package com.example.gradmanagementserver.Controller;
 
 import com.example.gradmanagementserver.Jwt.JwtTokenUtil;
 import com.example.gradmanagementserver.Model.User;
+import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,8 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+//    @Autowired
+//    private UserRepository userRepository;
     @GetMapping("/helloUser")
     public String hello(){
         return "hello";
@@ -35,4 +38,18 @@ public class UserController {
         Map<String,Object> response = userService.login(token);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+    @GetMapping("/getUsers")
+    public ResponseEntity<Object> getUsers(){
+        Map<String,Object> response = userService.getUsers();
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+//    @PutMapping("/updateRole/{role}")
+//    public ResponseEntity<Object> updateRole(@PathVariable String role,@RequestBody User user){
+//        user.setRole(role);
+//        userRepository.save(user);
+//        Map<String,Object> response = userService.updateRole(role,user);
+//        return new ResponseEntity<>(response,HttpStatus.OK);
+//    }
 }

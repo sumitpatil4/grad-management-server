@@ -6,4 +6,8 @@ import java.util.Map;
 
 public interface UserService {
     public Map<String,Object> login(String token);
+
+    public Map<String,Object> getUsers();
+
+    public Map<String,Object> updateRole(String role,User user);
 }
