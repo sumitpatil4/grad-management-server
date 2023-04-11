@@ -1,0 +1,34 @@
+package com.example.gradmanagementserver.Model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.List;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Setter
+@Getter
+@ToString
+@Entity
+@Table(name = "Topic")
+public class Topic {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "topicId")
+    private int topicId;
+    @Column(name = "topicName")
+    private String topicName;
+    @Column(name = "isCompleted")
+    private boolean isCompleted;
+
+    @ManyToOne
+    @JoinColumn(name = "trainingId")
+    @JsonIgnore
+    private Training training;
+
+    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Meeting> meetingList;
+}
