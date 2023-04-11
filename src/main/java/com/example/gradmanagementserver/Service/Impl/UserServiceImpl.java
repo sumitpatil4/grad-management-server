@@ -1,6 +1,7 @@
 package com.example.gradmanagementserver.Service.Impl;
 
 import com.example.gradmanagementserver.Jwt.JwtTokenUtil;
+import com.example.gradmanagementserver.Model.Notification;
 import com.example.gradmanagementserver.Model.User;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.UserService;
@@ -9,10 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -57,6 +55,24 @@ public class UserServiceImpl implements UserService {
         User newUser = (User) response.get("user");
         String accessToken = jwtTokenUtil.generateAccessToken(newUser);
         response.put("accessToken",accessToken);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> getUsers() {
+        Map<String, Object> response = new HashMap<>();
+        List<User> userList= userRepository.findAll();
+        response.put("message","Users Fetched");
+        response.put("userList",userList);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> updateRole(String role, User user) {
+        Map<String, Object> response = new HashMap<>();
+//        String id =
+//        response.put("message","Users Fetched");
+//        response.put("userList",userList);
         return response;
     }
 }

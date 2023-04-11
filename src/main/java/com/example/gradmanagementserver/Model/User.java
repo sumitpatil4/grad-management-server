@@ -1,5 +1,6 @@
 package com.example.gradmanagementserver.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -51,7 +52,7 @@ public class User implements UserDetails {
     private List<Training> trainingList = new ArrayList<>();
 
     @OneToOne(mappedBy = "user")
-    @JsonIgnore
+    @JsonBackReference
     private Notification notification;
 
     public User(String sub, String name, String email, String picture, String role) {
