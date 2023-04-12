@@ -36,9 +36,10 @@ public class TrainingServiceImpl implements TrainingService {
     }
 
     @Override
-    public Map<String, Object> getTraining() {
+    public Map<String, Object> getTrainingsById(String userId) {
         Map<String, Object> response = new HashMap<>();
-        List<Training> trainingsList=trainingRepository.findAll();
+        User user = userRepository.findById(userId).get();
+        List<Training> trainingsList = trainingRepository.findByUser(user);
         response.put("message","Trainings Fetched");
         response.put("training",trainingsList);
         return response;
