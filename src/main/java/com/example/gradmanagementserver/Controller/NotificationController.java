@@ -26,4 +26,11 @@ public class NotificationController {
         Map<String,Object> response = notificationService.getNotifications();
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @DeleteMapping("/deleteNotification/{notificationId}")
+    @CrossOrigin(value = "**")
+    public ResponseEntity<Object> deleteNotification(@PathVariable Integer notificationId){
+        Map<String,Object> response = notificationService.deleteNotification(notificationId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

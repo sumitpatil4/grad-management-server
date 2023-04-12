@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,8 +27,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private UserRepository userRepository;
     @GetMapping("/helloUser")
     public String hello(){
         return "hello";
@@ -45,11 +44,24 @@ public class UserController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
-//    @PutMapping("/updateRole/{role}")
-//    public ResponseEntity<Object> updateRole(@PathVariable String role,@RequestBody User user){
-//        user.setRole(role);
-//        userRepository.save(user);
-//        Map<String,Object> response = userService.updateRole(role,user);
-//        return new ResponseEntity<>(response,HttpStatus.OK);
+//    @GetMapping("/getByRole/{role}")
+//    public ResponseEntity<?> getByRole(@PathVariable String role){
+//       List<User> userList = userRepository.findByRole(role);
+//       return new ResponseEntity<>(userList,HttpStatus.OK);
+//    }
+
+    @PutMapping("/updateRole/{role}")
+    @CrossOrigin(value = "**")
+    public ResponseEntity<Object> updateRole(@PathVariable String role,@RequestBody User user){
+        Map<String,Object> response = userService.updateRole(role,user);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+//    @DeleteMapping("/deleteUser")
+//    public ResponseEntity<?> deleteUser(@RequestBody User user){
+//        User newUser = userRepository.findById(user.getUserId()).get();
+//        userRepository.delete(user);
+//        return new ResponseEntity<>("Delete",HttpStatus.OK);
 //    }
 }

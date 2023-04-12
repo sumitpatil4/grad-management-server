@@ -70,9 +70,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Map<String, Object> updateRole(String role, User user) {
         Map<String, Object> response = new HashMap<>();
-//        String id =
-//        response.put("message","Users Fetched");
-//        response.put("userList",userList);
+        User newUser = userRepository.findById(user.getUserId()).get();
+        newUser.setRole(role);
+        userRepository.save(newUser);
+        response.put("message","Role Updated");
+        response.put("user",newUser);
         return response;
     }
 }
