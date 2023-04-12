@@ -1,5 +1,6 @@
 package com.example.gradmanagementserver.Controller;
 
+import com.example.gradmanagementserver.Exception.InvalidJwtException;
 import com.example.gradmanagementserver.Jwt.JwtTokenUtil;
 import com.example.gradmanagementserver.Model.User;
 import com.example.gradmanagementserver.Repository.UserRepository;

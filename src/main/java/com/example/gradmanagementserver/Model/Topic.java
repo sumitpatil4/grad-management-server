@@ -3,6 +3,8 @@ package com.example.gradmanagementserver.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ public class Topic {
     @ManyToOne
     @JoinColumn(name = "trainingId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
 
     @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL)

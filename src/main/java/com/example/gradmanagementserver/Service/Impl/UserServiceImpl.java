@@ -22,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Map<String, Object> login(String token) {
+        Map<String,Object> response = new HashMap<>();
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String[] chunks = token.split("\\.");
         String payload = new String(decoder.decode(chunks[1]));
@@ -34,7 +35,6 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
         }
         String ROLE = "ROLE_USER";
-        Map<String,Object> response = new HashMap<>();
         Optional<User> user = userRepository.findById(map.get("sub"));
         if(user.equals(Optional.empty())){
             User newUser = new User(

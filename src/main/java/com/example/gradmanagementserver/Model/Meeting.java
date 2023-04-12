@@ -3,6 +3,8 @@ package com.example.gradmanagementserver.Model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -36,19 +38,23 @@ public class Meeting {
     @ManyToOne
     @JoinColumn(name = "topicId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Topic topic;
 
     @ManyToOne
     @JoinColumn(name = "trainingId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
 
     @ManyToOne
     @JoinColumn(name = "trainerId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Trainer trainer;
 
     @ManyToMany(mappedBy = "meetingList")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Batch> batchList;
 }

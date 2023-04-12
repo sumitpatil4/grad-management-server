@@ -28,7 +28,7 @@ public class Training {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "training",cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "training",cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Batch> batchList;
 
