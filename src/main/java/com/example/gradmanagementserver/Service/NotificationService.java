@@ -9,4 +9,6 @@ public interface NotificationService {
     public Map<String,Object> createNewNotification(Notification notification,String userId);
 
     public Map<String,Object> getNotifications();
+
+    public Map<String,Object> deleteNotification(Integer notificationId);
 }

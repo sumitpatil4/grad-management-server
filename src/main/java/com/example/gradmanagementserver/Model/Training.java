@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+
 import java.util.List;
 
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class Training {
     @Column(name = "trainingName")
     private String trainingName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "userId")
     @JsonBackReference
     private User user;

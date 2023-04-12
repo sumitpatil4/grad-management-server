@@ -53,4 +53,12 @@ public class NotificationServiceImpl implements NotificationService {
         response.put("notificationList",notificationList);
         return response;
     }
+
+    @Override
+    public Map<String, Object> deleteNotification(Integer notificationId) {
+        Map<String, Object> response = new HashMap<>();
+        notificationRepository.deleteUsingId(notificationId);
+        response.put("message","Notification Deleted");
+        return response;
+    }
 }
