@@ -48,7 +48,6 @@ public class User implements UserDetails {
     private List<Trainer> trainerList = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    @JsonIgnore
     @JsonManagedReference
     private List<Training> trainingList = new ArrayList<>();
 
