@@ -31,9 +31,12 @@ public class Notification {
     private Timestamp timestamp;
     @Column(name = "RequestedRole")
     private String requestedRole;
+
+
     @OneToOne
     @JoinColumn(name = "userId")
     @Nullable
     @JsonManagedReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 }

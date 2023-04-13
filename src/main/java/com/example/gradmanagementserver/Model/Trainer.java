@@ -1,9 +1,13 @@
 package com.example.gradmanagementserver.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -27,15 +31,29 @@ public class Trainer {
     @Column(name = "skill")
     private String skill;
 
-    @ManyToMany(mappedBy = "trainerList",cascade = CascadeType.ALL)
+    @Column(name = "isActive")
+    private boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-    private List<User> userList;
+    private User user;
 
     @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Availability> availabilityList;
+    private List<Availability> availabilityList=new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Meeting> meetingList;
+    private List<Meeting> meetingList=new ArrayList<>();
+
+    public Trainer(int trainerId, String trainerName, String email, String phoneNumber, String skill,boolean isActive) {
+        this.trainerId=trainerId;
+        this.trainerName=trainerName;
+        this.email=email;
+        this.phoneNumber=phoneNumber;
+        this.skill=skill;
+        this.isActive=isActive;
+    }
 }

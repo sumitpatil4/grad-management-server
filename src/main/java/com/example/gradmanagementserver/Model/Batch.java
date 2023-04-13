@@ -33,11 +33,12 @@ public class Batch{
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
     @JsonIgnore
     @JoinTable(
             name = "batch_meeting",
             joinColumns = @JoinColumn(name = "batchId"),
             inverseJoinColumns = @JoinColumn(name = "meetingId"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Meeting> meetingList ;
 }
