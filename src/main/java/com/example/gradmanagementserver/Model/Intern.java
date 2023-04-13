@@ -17,7 +17,7 @@ public class Intern {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "internId")
-    private int interId;
+    private int internId;
     @Column(name = "internName")
     private String internName;
     @Column(name = "phoneNumber")
@@ -28,11 +28,13 @@ public class Intern {
     @ManyToOne
     @JoinColumn(name = "userId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "BatchId")
     @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Batch batch;
 
     @ManyToOne

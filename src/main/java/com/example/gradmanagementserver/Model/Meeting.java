@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class Meeting {
     @Column(name = "date")
     private Date date;
     @Column(name = "time")
-    private Timestamp time;
+    private Time time;
     @Column(name = "meetingLink")
     private String meetingLink;
     @Column(name = "feedbackLink")
@@ -53,7 +54,7 @@ public class Meeting {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trainer trainer;
 
-    @ManyToMany(mappedBy = "meetingList")
+    @ManyToMany(mappedBy = "meetingList",cascade = CascadeType.REMOVE)
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Batch> batchList;

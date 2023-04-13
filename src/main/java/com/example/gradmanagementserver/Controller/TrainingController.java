@@ -17,9 +17,9 @@ public class TrainingController {
     @Autowired
     private TrainingService trainingService;
 
-    @GetMapping("/getTrainings")
-    public ResponseEntity<?> getTrainings(){
-        Map<String,Object> response = trainingService.getTraining();
+    @GetMapping("/getTrainingById/{userId}")
+    public ResponseEntity<?> getTrainingsById(@PathVariable String userId){
+        Map<String,Object> response = trainingService.getTrainingsById(userId);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 

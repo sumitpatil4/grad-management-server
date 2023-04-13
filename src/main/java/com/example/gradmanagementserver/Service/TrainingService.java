@@ -9,7 +9,7 @@ public interface TrainingService {
 
     public Map<String,Object> createTraining(String userId,Training training);
 
-    public Map<String,Object> getTraining();
+    public Map<String,Object> getTrainingsById(String userId);
 
     public Map<String,Object> updateTraining(Training training);
 
