@@ -1,5 +1,6 @@
 package com.example.gradmanagementserver.Service;
 
+import com.example.gradmanagementserver.Model.InterListDto;
 import com.example.gradmanagementserver.Model.Intern;
 
 import java.util.Map;
@@ -14,5 +15,9 @@ public interface InternService {
     public Map<String,Object> updateIntern(Integer internId,Intern intern);
 
     public Map<String,Object> deleteIntern(Integer internId);
+
+    public Map<String,Object> updateInternBatch(Integer batchId, InterListDto interListDto);
+
+    public Map<String,Object> deleteInternBatch(Integer internId, Integer defBatchId);
 
 }

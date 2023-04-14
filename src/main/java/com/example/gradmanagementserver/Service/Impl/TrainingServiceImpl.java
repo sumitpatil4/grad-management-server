@@ -38,6 +38,7 @@ public class TrainingServiceImpl implements TrainingService {
         Batch batch = new Batch();
         batch.setBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId()));
         batch.setTraining(newTraining);
+        batch.setActive(true);
         batchRepository.save(batch);
         response.put("message","Training created");
         response.put("training",newTraining);
