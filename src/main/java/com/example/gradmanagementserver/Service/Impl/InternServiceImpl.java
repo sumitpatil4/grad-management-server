@@ -1,9 +1,6 @@
 package com.example.gradmanagementserver.Service.Impl;
 
-import com.example.gradmanagementserver.Model.Batch;
-import com.example.gradmanagementserver.Model.Intern;
-import com.example.gradmanagementserver.Model.Training;
-import com.example.gradmanagementserver.Model.User;
+import com.example.gradmanagementserver.Model.*;
 import com.example.gradmanagementserver.Repository.BatchRepository;
 import com.example.gradmanagementserver.Repository.InternRepository;
 import com.example.gradmanagementserver.Repository.TrainingRepository;
@@ -57,6 +54,7 @@ public class InternServiceImpl implements InternService {
         User user = userRepository.findById(userId).get();
         Training training = trainingRepository.findById(trainingId).get();
         String defBatchName = training.getTrainingName()+"_"+Integer.toString(trainingId);
+        System.out.println(defBatchName);
         Batch batch = batchRepository.findByBatchName(defBatchName).get(0);
         Intern newIntern = new Intern();
         newIntern.setInternId(intern.getInternId());
@@ -92,6 +90,30 @@ public class InternServiceImpl implements InternService {
         internRepository.delete(intern);
         response.put("message","Intern Deleted");
         response.put("intern",intern);
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> updateInternBatch(Integer batchId, InterListDto interListDto) {
+        Map<String,Object> response = new HashMap<>();
+        Batch batch = batchRepository.findById(batchId).get();
+        for(Integer internId : interListDto.getInternIdList()){
+            Intern intern =  internRepository.findById(internId).get();
+            intern.setBatch(batch);
+            internRepository.save(intern);
+        }
+        response.put("message","Intern Batch Updated");
+        return response;
+    }
+
+    @Override
+    public Map<String, Object> deleteInternBatch(Integer internId, Integer defBatchId) {
+        Map<String,Object> response = new HashMap<>();
+        Batch batch = batchRepository.findById(defBatchId).get();
+        Intern intern = internRepository.findById(internId).get();
+        intern.setBatch(batch);
+        internRepository.save(intern);
+        response.put("message","Intern Batch Updated to default");
         return response;
     }
 }
