@@ -25,15 +25,14 @@ public class Intern {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "userId")
     @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "BatchId")
-    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Batch batch;
 

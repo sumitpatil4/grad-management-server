@@ -1,8 +1,10 @@
 package com.example.gradmanagementserver.Service.Impl;
 
+import com.example.gradmanagementserver.Model.Batch;
 import com.example.gradmanagementserver.Model.Notification;
 import com.example.gradmanagementserver.Model.Training;
 import com.example.gradmanagementserver.Model.User;
+import com.example.gradmanagementserver.Repository.BatchRepository;
 import com.example.gradmanagementserver.Repository.TrainingRepository;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.TrainingService;
@@ -21,6 +23,9 @@ public class TrainingServiceImpl implements TrainingService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private BatchRepository batchRepository;
+
     @Override
     public Map<String, Object> createTraining(String userId, Training training) {
         Map<String, Object> response = new HashMap<>();
@@ -30,6 +35,10 @@ public class TrainingServiceImpl implements TrainingService {
         newTraining.setTrainingName(training.getTrainingName());
         newTraining.setUser(user);
         trainingRepository.save(newTraining);
+        Batch batch = new Batch();
+        batch.setBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId()));
+        batch.setTraining(newTraining);
+        batchRepository.save(batch);
         response.put("message","Training created");
         response.put("training",newTraining);
         return response;
@@ -49,8 +58,11 @@ public class TrainingServiceImpl implements TrainingService {
     public Map<String, Object> updateTraining(Training training) {
         Map<String, Object> response = new HashMap<>();
         Training newTraining  = trainingRepository.findById(training.getTrainingId()).get();
+        Batch batch = batchRepository.findByBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId())).get(0);
         newTraining.setTrainingName(training.getTrainingName());
+        batch.setBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId()));
         trainingRepository.save(newTraining);
+        batchRepository.save(batch);
         response.put("message","Training updated");
         response.put("training",newTraining);
         return response;
