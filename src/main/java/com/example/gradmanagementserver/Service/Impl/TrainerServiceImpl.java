@@ -63,7 +63,6 @@ public class TrainerServiceImpl implements TrainerService {
         Map<String,Object> response = new HashMap<>();
         User user = userRepository.findById(userId).get();
         List<Trainer> trainerList = trainerRepository.findByUser(user);
-        System.out.println(trainerList.get(0).getTrainerName());
         List<Trainer> filteredList = trainerList.stream().filter(trainer -> trainer.isActive()).collect(Collectors.toList());
         response.put("message", "Trainers Fetched");
         response.put("trainers",filteredList);

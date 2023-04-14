@@ -1,6 +1,7 @@
 package com.example.gradmanagementserver.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -22,6 +23,9 @@ public class Batch{
     private int batchId;
     @Column(name = "batchName")
     private String batchName;
+
+    @Column(name = "isActive")
+    private boolean isActive;
 
     @OneToMany(mappedBy = "batch",cascade = CascadeType.ALL)
     @JsonIgnore

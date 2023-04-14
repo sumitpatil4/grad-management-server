@@ -24,6 +24,8 @@ public class Topic {
     private String topicName;
     @Column(name = "isCompleted")
     private boolean isCompleted;
+    @Column(name = "isActive")
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "trainingId")
