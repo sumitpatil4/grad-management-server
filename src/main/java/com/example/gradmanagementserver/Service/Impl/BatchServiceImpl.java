@@ -9,6 +9,8 @@ import com.example.gradmanagementserver.Repository.InternRepository;
 import com.example.gradmanagementserver.Repository.TrainingRepository;
 import com.example.gradmanagementserver.Service.BatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -29,76 +31,129 @@ public class BatchServiceImpl implements BatchService {
     private InternRepository internRepository;
 
     @Override
-    public Map<String, Object> createBatch(Integer trainingId, Batch batch) {
+    public ResponseEntity<?> createBatch(Integer trainingId, Batch batch) {
         Map<String,Object> response = new HashMap<>();
-        Training training = trainingRepository.findById(trainingId).get();
-        Batch batch1 = new Batch();
-        batch1.setBatchName(batch.getBatchName());
-        batch1.setTraining(training);
-        batch1.setActive(true);
-        batchRepository.save(batch1);
+        Training training;
+        Batch batch1;
+        try{
+            training = trainingRepository.findById(trainingId).get();
+            batch1 = new Batch();
+            batch1.setBatchName(batch.getBatchName());
+            batch1.setTraining(training);
+            batch1.setActive(true);
+            batchRepository.save(batch1);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Batch created");
         response.put("batch",batch1);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> updateBatch(Integer batchId,Batch batch) {
+    public ResponseEntity<?> updateBatch(Integer batchId,Batch batch) {
         Map<String,Object> response = new HashMap<>();
-        Batch batch1 = batchRepository.findById(batchId).get();
-        batch1.setBatchName(batch.getBatchName());
-        batchRepository.save(batch1);
+        Batch batch1;
+        try{
+            batch1 = batchRepository.findById(batchId).get();
+            batch1.setBatchName(batch.getBatchName());
+            batchRepository.save(batch1);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Batch Updated");
         response.put("batch",batch1);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> getBatches(Integer trainingId) {
+    public ResponseEntity<?> getBatches(Integer trainingId) {
         Map<String,Object> response = new HashMap<>();
-        Training training = trainingRepository.findById(trainingId).get();
-        List<Batch> batchList = batchRepository.findByTraining(training);
-        List<Batch> newBatchList = batchList.stream().filter(batch -> batch.isActive()).collect(Collectors.toList());
+        Training training;
+        List<Batch> batchList;
+        List<Batch> filteredBatchList;
+        try{
+            training = trainingRepository.findById(trainingId).get();
+            batchList = batchRepository.findByTraining(training);
+            filteredBatchList = batchList.stream().filter(batch -> batch.isActive()).collect(Collectors.toList());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Batches Fetched");
-        response.put("batch",newBatchList);
-        return response;
+        response.put("batch",filteredBatchList);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> deleteBatch(Integer batchId) {
+    public ResponseEntity<?> deleteBatch(Integer batchId) {
         Map<String,Object> response = new HashMap<>();
-        Batch batch = batchRepository.findById(batchId).get();
-        batch.setActive(false);
-        batchRepository.save(batch);
+        Batch batch;
+        try{
+            batch = batchRepository.findById(batchId).get();
+            batch.setActive(false);
+            batchRepository.save(batch);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Batch Deleted");
         response.put("batch",batch);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> getBatchById(Integer batchId) {
+    public ResponseEntity<?> getBatchById(Integer batchId) {
         Map<String,Object> response = new HashMap<>();
-        Batch batch = batchRepository.findById(batchId).get();
-        List<Intern> internList = batch.getInternList();
+        Batch batch;
+        List<Intern> internList;
+        try{
+            batch = batchRepository.findById(batchId).get();
+            internList = batch.getInternList();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Batch Fetched");
         response.put("internList",internList);
         response.put("batch",batch);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> updateInternBatch(Integer batchId, Integer defBatchId, InterListDto interListDto) {
+    public ResponseEntity<?> updateInternBatch(Integer batchId, Integer defBatchId, InterListDto interListDto) {
         Map<String,Object> response = new HashMap<>();
-        Batch deletedBatch = batchRepository.findById(batchId).get();
-        Batch defaultBatch = batchRepository.findById(defBatchId).get();
-        for(Integer internId : interListDto.getInternIdList()){
-            Intern intern =  internRepository.findById(internId).get();
-            intern.setBatch(defaultBatch);
-            internRepository.save(intern);
+        Batch deletedBatch;
+        Batch defaultBatch;
+        try{
+            deletedBatch = batchRepository.findById(batchId).get();
+            defaultBatch = batchRepository.findById(defBatchId).get();
+            for(Integer internId : interListDto.getInternIdList()){
+                Intern intern =  internRepository.findById(internId).get();
+                intern.setBatch(defaultBatch);
+                internRepository.save(intern);
+            }
+            deletedBatch.setActive(false);
+            batchRepository.save(deletedBatch);
         }
-        deletedBatch.setActive(false);
-        batchRepository.save(deletedBatch);
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Batch Deleted");
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

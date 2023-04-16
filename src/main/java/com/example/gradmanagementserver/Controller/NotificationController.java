@@ -16,21 +16,18 @@ public class NotificationController {
     @Autowired
     private NotificationService notificationService;
     @PostMapping("/create/{userId}")
-    public ResponseEntity<Object> createNewNotification(@PathVariable String userId, @RequestBody Notification notification){
-        Map<String,Object> response = notificationService.createNewNotification(notification,userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> createNewNotification(@PathVariable String userId, @RequestBody Notification notification){
+        return notificationService.createNewNotification(notification,userId);
     }
 
     @GetMapping("/getNotifications")
-    public ResponseEntity<Object> getNotifications(){
-        Map<String,Object> response = notificationService.getNotifications();
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> getNotifications(){
+        return notificationService.getNotifications();
     }
 
     @DeleteMapping("/deleteNotification/{notificationId}")
     @CrossOrigin(value = "**")
-    public ResponseEntity<Object> deleteNotification(@PathVariable Integer notificationId){
-        Map<String,Object> response = notificationService.deleteNotification(notificationId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> deleteNotification(@PathVariable Integer notificationId){
+        return notificationService.deleteNotification(notificationId);
     }
 }

@@ -7,6 +7,8 @@ import com.example.gradmanagementserver.Repository.TrainingRepository;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.InternService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -30,90 +32,150 @@ public class InternServiceImpl implements InternService {
 
 
     @Override
-    public Map<String, Object> getInternById(Integer internId) {
+    public ResponseEntity<?> getInternById(Integer internId) {
         Map<String,Object> response = new HashMap<>();
-        Intern intern = internRepository.findById(internId).get();
+        Intern intern;
+        try{
+            intern = internRepository.findById(internId).get();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Fetched");
         response.put("intern",intern);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> getInterns(Integer trainingId) {
+    public ResponseEntity<?> getInterns(Integer trainingId) {
         Map<String,Object> response = new HashMap<>();
-        Training training = trainingRepository.findById(trainingId).get();
-        List<Intern> internList = internRepository.findByTraining(training);
+        Training training;
+        List<Intern> internList;
+        try{
+            training = trainingRepository.findById(trainingId).get();
+            internList = internRepository.findByTraining(training);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Fetched");
         response.put("intern",internList);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> createInterns(String userId, Integer trainingId, Intern intern) {
+    public ResponseEntity<?> createInterns(String userId, Integer trainingId, Intern intern) {
         Map<String,Object> response = new HashMap<>();
-        User user = userRepository.findById(userId).get();
-        Training training = trainingRepository.findById(trainingId).get();
-        String defBatchName = training.getTrainingName()+"_"+Integer.toString(trainingId);
-        System.out.println(defBatchName);
-        Batch batch = batchRepository.findByBatchName(defBatchName).get(0);
-        Intern newIntern = new Intern();
-        newIntern.setInternId(intern.getInternId());
-        newIntern.setInternName(intern.getInternName());
-        newIntern.setEmail(intern.getEmail());
-        newIntern.setPhoneNumber(intern.getPhoneNumber());
-        newIntern.setBatch(batch);
-        newIntern.setTraining(training);
-        newIntern.setUser(user);
-        internRepository.save(newIntern);
+        User user;
+        Training training;
+        Batch batch;
+        Intern newIntern;
+        try{
+            user = userRepository.findById(userId).get();
+            training = trainingRepository.findById(trainingId).get();
+            String defBatchName = training.getTrainingName()+"_"+Integer.toString(trainingId);
+            batch = batchRepository.findByBatchName(defBatchName).get(0);
+            newIntern = new Intern();
+            newIntern.setInternId(intern.getInternId());
+            newIntern.setInternName(intern.getInternName());
+            newIntern.setEmail(intern.getEmail());
+            newIntern.setPhoneNumber(intern.getPhoneNumber());
+            newIntern.setBatch(batch);
+            newIntern.setTraining(training);
+            newIntern.setUser(user);
+            internRepository.save(newIntern);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Created");
         response.put("intern",newIntern);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> updateIntern(Integer internId, Intern intern) {
+    public ResponseEntity<?> updateIntern(Integer internId, Intern intern) {
         Map<String,Object> response = new HashMap<>();
-        Intern newIntern = internRepository.findById(internId).get();
-        newIntern.setInternName(intern.getInternName());
-        newIntern.setEmail(intern.getEmail());
-        newIntern.setPhoneNumber(intern.getPhoneNumber());
-        internRepository.save(newIntern);
+        Intern newIntern;
+        try{
+            newIntern = internRepository.findById(internId).get();
+            newIntern.setInternName(intern.getInternName());
+            newIntern.setEmail(intern.getEmail());
+            newIntern.setPhoneNumber(intern.getPhoneNumber());
+            internRepository.save(newIntern);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Updated");
         response.put("intern",newIntern);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> deleteIntern(Integer internId) {
+    public ResponseEntity<?> deleteIntern(Integer internId) {
         Map<String,Object> response = new HashMap<>();
-        Intern intern = internRepository.findById(internId).get();
-        internRepository.delete(intern);
+        Intern intern;
+        try{
+            intern = internRepository.findById(internId).get();
+            internRepository.delete(intern);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Deleted");
         response.put("intern",intern);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> updateInternBatch(Integer batchId, InterListDto interListDto) {
+    public ResponseEntity<?> updateInternBatch(Integer batchId, InterListDto interListDto) {
         Map<String,Object> response = new HashMap<>();
-        Batch batch = batchRepository.findById(batchId).get();
-        for(Integer internId : interListDto.getInternIdList()){
-            Intern intern =  internRepository.findById(internId).get();
+        Batch batch;
+        try{
+            batch = batchRepository.findById(batchId).get();
+            for(Integer internId : interListDto.getInternIdList()){
+                Intern intern =  internRepository.findById(internId).get();
+                intern.setBatch(batch);
+                internRepository.save(intern);
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("message","Intern Batch Updated");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> deleteInternBatch(Integer internId, Integer defBatchId) {
+        Map<String,Object> response = new HashMap<>();
+        Batch batch;
+        Intern intern;
+        try{
+            batch = batchRepository.findById(defBatchId).get();
+            intern = internRepository.findById(internId).get();
             intern.setBatch(batch);
             internRepository.save(intern);
         }
-        response.put("message","Intern Batch Updated");
-        return response;
-    }
-
-    @Override
-    public Map<String, Object> deleteInternBatch(Integer internId, Integer defBatchId) {
-        Map<String,Object> response = new HashMap<>();
-        Batch batch = batchRepository.findById(defBatchId).get();
-        Intern intern = internRepository.findById(internId).get();
-        intern.setBatch(batch);
-        internRepository.save(intern);
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Intern Batch Updated to default");
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

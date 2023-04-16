@@ -2,22 +2,23 @@ package com.example.gradmanagementserver.Service;
 
 import com.example.gradmanagementserver.Model.InterListDto;
 import com.example.gradmanagementserver.Model.Intern;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 public interface InternService {
 
-    public Map<String,Object> getInternById(Integer internId);
-    public Map<String,Object> getInterns(Integer trainingId);
+    public ResponseEntity<?> getInternById(Integer internId);
+    public ResponseEntity<?> getInterns(Integer trainingId);
 
-    public Map<String,Object> createInterns(String userId, Integer trainingId, Intern intern);
+    public ResponseEntity<?> createInterns(String userId, Integer trainingId, Intern intern);
 
-    public Map<String,Object> updateIntern(Integer internId,Intern intern);
+    public ResponseEntity<?> updateIntern(Integer internId,Intern intern);
 
-    public Map<String,Object> deleteIntern(Integer internId);
+    public ResponseEntity<?> deleteIntern(Integer internId);
 
-    public Map<String,Object> updateInternBatch(Integer batchId, InterListDto interListDto);
+    public ResponseEntity<?> updateInternBatch(Integer batchId, InterListDto interListDto);
 
-    public Map<String,Object> deleteInternBatch(Integer internId, Integer defBatchId);
+    public ResponseEntity<?> deleteInternBatch(Integer internId, Integer defBatchId);
 
 }

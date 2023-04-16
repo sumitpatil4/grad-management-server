@@ -19,27 +19,23 @@ public class TrainingController {
 
     @GetMapping("/getTrainingById/{userId}")
     public ResponseEntity<?> getTrainingsById(@PathVariable String userId){
-        Map<String,Object> response = trainingService.getTrainingsById(userId);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return  trainingService.getTrainingsById(userId);
     }
 
     @PostMapping("/createTraining/{userId}")
     public ResponseEntity<?> createTraining(@PathVariable String userId, @RequestBody Training training){
-        Map<String,Object> response = trainingService.createTraining(userId, training);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return trainingService.createTraining(userId, training);
     }
 
     @PutMapping("/updateTraining")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> updateTraining(@RequestBody Training training){
-        Map<String,Object> response = trainingService.updateTraining(training);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return trainingService.updateTraining(training);
     }
 
     @DeleteMapping("/deleteTraining/{trainingId}")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> deleteTraining(@PathVariable Integer trainingId){
-        Map<String,Object> response = trainingService.deleteTraining(trainingId);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return trainingService.deleteTraining(trainingId);
     }
 }

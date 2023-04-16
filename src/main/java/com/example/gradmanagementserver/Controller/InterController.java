@@ -18,48 +18,41 @@ public class InterController {
     private InternService internService;
 
     @GetMapping("/getInternById/{internId}")
-    public ResponseEntity<?> getInterNById(@PathVariable Integer internId){
-        Map<String,Object> response = internService.getInternById(internId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> getInternById(@PathVariable Integer internId){
+        return internService.getInternById(internId);
     }
 
     @GetMapping("/getInterns/{trainingId}")
     public ResponseEntity<?> getInterns(@PathVariable Integer trainingId){
-        Map<String,Object> response = internService.getInterns(trainingId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.getInterns(trainingId);
     }
 
     @PostMapping("/createIntern/{userId}/{trainingId}")
     public ResponseEntity<?> createIntern(@PathVariable String userId,@PathVariable Integer trainingId,@RequestBody Intern intern){
-        Map<String,Object> response = internService.createInterns(userId,trainingId,intern);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.createInterns(userId,trainingId,intern);
     }
 
     @PutMapping("/updateIntern/{internId}")
     @CrossOrigin("**")
     public ResponseEntity<?> updateIntern(@PathVariable Integer internId,@RequestBody Intern intern){
-        Map<String,Object> response = internService.updateIntern(internId,intern);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.updateIntern(internId,intern);
     }
 
     @DeleteMapping("/deleteIntern/{internId}")
     @CrossOrigin("**")
     public ResponseEntity<?> deleteIntern(@PathVariable Integer internId){
-        Map<String,Object> response = internService.deleteIntern(internId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.deleteIntern(internId);
     }
 
     @PutMapping("/updateInternBatch/{batchId}")
     @CrossOrigin("**")
     public ResponseEntity<?> updateInternBatch(@PathVariable Integer batchId, @RequestBody InterListDto interListDto) {
-        Map<String, Object> response = internService.updateInternBatch(batchId, interListDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.updateInternBatch(batchId, interListDto);
     }
 
     @PutMapping("/deleteInternBatch/{internId}/{defBatchId}")
     @CrossOrigin("**")
     public ResponseEntity<?> deleteInternBatch(@PathVariable Integer internId, @PathVariable Integer defBatchId) {
-        Map<String, Object> response = internService.deleteInternBatch(internId, defBatchId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return internService.deleteInternBatch(internId, defBatchId);
     }
 }

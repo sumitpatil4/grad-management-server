@@ -2,13 +2,15 @@ package com.example.gradmanagementserver.Service;
 
 import com.example.gradmanagementserver.Model.Availability;
 import com.example.gradmanagementserver.Model.Trainer;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 public interface AvailabilityService {
-    public Map<String,Object> createAvailability(Integer trainerId, Availability availability);
-    public Map<String,Object> getAvailability(Integer trainerId);
+    public ResponseEntity<?> createAvailability(Integer trainerId, Availability availability);
+    public ResponseEntity<?> getAvailability(Integer trainerId);
 
-    public Map<String,Object> deleteAvailability(Integer availabilityId);
+    public ResponseEntity<?> deleteAvailability(Integer availabilityId);
 
+    public ResponseEntity<?> updateAvailability(Integer availabilityId,Availability availability);
 }

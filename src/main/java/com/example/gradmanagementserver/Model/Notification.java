@@ -1,5 +1,6 @@
 package com.example.gradmanagementserver.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.annotation.Nullable;
@@ -35,7 +36,6 @@ public class Notification {
 
     @OneToOne
     @JoinColumn(name = "userId")
-    @Nullable
     @JsonManagedReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;

@@ -19,40 +19,34 @@ public class BatchController {
 
     @PostMapping("/createBatch/{trainingId}")
     public ResponseEntity<?> createBatch(@PathVariable Integer trainingId, @RequestBody Batch batch){
-        Map<String,Object> response = batchService.createBatch(trainingId,batch);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.createBatch(trainingId,batch);
     }
 
     @GetMapping("/getBatch/{trainingId}")
     public ResponseEntity<?> getBatches(@PathVariable Integer trainingId){
-        Map<String,Object> response = batchService.getBatches(trainingId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.getBatches(trainingId);
     }
 
     @GetMapping("/getBatchById/{batchId}")
     public ResponseEntity<?> getBatchById(@PathVariable Integer batchId){
-        Map<String,Object> response = batchService.getBatchById(batchId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.getBatchById(batchId);
     }
 
     @PutMapping("/updateBatch/{batchId}")
     @CrossOrigin("**")
     public ResponseEntity<?> updateBatch(@PathVariable Integer batchId,@RequestBody Batch batch){
-        Map<String,Object> response = batchService.updateBatch(batchId,batch);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.updateBatch(batchId,batch);
     }
 
     @DeleteMapping("deleteBatch/{batchId}")
     @CrossOrigin("**")
     public ResponseEntity<?> deleteBatch(@PathVariable Integer batchId){
-        Map<String,Object> response = batchService.deleteBatch(batchId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.deleteBatch(batchId);
     }
 
     @PutMapping("/updateInternBatch/{batchId}/{defBatchId}")
     @CrossOrigin("**")
     public ResponseEntity<?> updateInternBatch(@PathVariable Integer batchId,@PathVariable Integer defBatchId, @RequestBody InterListDto interListDto) {
-        Map<String, Object> response = batchService.updateInternBatch(batchId, defBatchId, interListDto);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return batchService.updateInternBatch(batchId, defBatchId, interListDto);
     }
 }

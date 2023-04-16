@@ -17,21 +17,24 @@ public class AvailabilityController {
     private AvailabilityService availabilityService;
 
     @PostMapping("/createAvailability/{trainerId}")
-    public ResponseEntity<Object> createAvailability(@PathVariable Integer trainerId, @RequestBody Availability availability){
-        Map<String,Object> response = availabilityService.createAvailability(trainerId, availability);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> createAvailability(@PathVariable Integer trainerId, @RequestBody Availability availability){
+        return availabilityService.createAvailability(trainerId, availability);
     }
 
     @GetMapping("/getAvailability/{trainerId}")
-    public ResponseEntity<Object> getAvailability(@PathVariable Integer trainerId){
-        Map<String,Object> response = availabilityService.getAvailability(trainerId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> getAvailability(@PathVariable Integer trainerId){
+       return availabilityService.getAvailability(trainerId);
     }
 
     @DeleteMapping("/deleteAvailability/{availabilityId}")
     @CrossOrigin(value = "**")
-    public ResponseEntity<Object> deleteAvailability(@PathVariable Integer availabilityId){
-        Map<String,Object> response = availabilityService.deleteAvailability(availabilityId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    public ResponseEntity<?> deleteAvailability(@PathVariable Integer availabilityId){
+        return availabilityService.deleteAvailability(availabilityId);
+    }
+
+    @PutMapping("/updateAvailability/{availabilityId}")
+    @CrossOrigin(value = "**")
+    public ResponseEntity<?> updateAvailability(@PathVariable Integer availabilityId, @RequestBody Availability availability){
+        return availabilityService.updateAvailability(availabilityId,availability);
     }
 }
