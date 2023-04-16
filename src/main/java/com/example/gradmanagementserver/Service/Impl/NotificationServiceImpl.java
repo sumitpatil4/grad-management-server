@@ -5,7 +5,10 @@ import com.example.gradmanagementserver.Model.User;
 import com.example.gradmanagementserver.Repository.NotificationRepository;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.NotificationService;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,44 +24,70 @@ public class NotificationServiceImpl implements NotificationService {
     @Autowired
     private NotificationRepository notificationRepository;
     @Override
-    public Map<String, Object> createNewNotification(Notification notification, String userId) {
+    public ResponseEntity<?> createNewNotification(Notification notification, String userId) {
         Map<String, Object> response = new HashMap<>();
-        User user = userRepository.findById(userId).get();
-        Notification fetchedNotification = notificationRepository.findByUser(user);
-        Notification newNotification = new Notification(
-                notification.getNotificationId(),
-                notification.getNotificationDesc(),
-                new Timestamp(System.currentTimeMillis()),
-                notification.getRequestedRole(),
-                user
-        );
-        if(fetchedNotification==null) {
-            notificationRepository.save(newNotification);
-            response.put("message", "Notification created");
+        User user;
+        Notification newNotification;
+        Notification fetchedNotification;
+        try{
+            user = userRepository.findById(userId).get();
+            fetchedNotification = notificationRepository.findByUser(user);
+            if(fetchedNotification==null) {
+                newNotification = new Notification();
+                newNotification.setNotificationDesc(notification.getNotificationDesc());
+                newNotification.setTimestamp(new Timestamp(System.currentTimeMillis()));
+                newNotification.setRequestedRole(notification.getRequestedRole());
+                newNotification.setUser(user);
+                notificationRepository.save(newNotification);
+                response.put("message", "Notification created");
+                response.put("notification",newNotification);
+            }
+            else{
+                fetchedNotification.setNotificationDesc(notification.getNotificationDesc());
+                fetchedNotification.setRequestedRole(notification.getRequestedRole());
+                fetchedNotification.setTimestamp(new Timestamp(System.currentTimeMillis()));
+                notificationRepository.save(fetchedNotification);
+                response.put("message", "Notification updated");
+                response.put("notification",fetchedNotification);
+            }
         }
-        else{
-            newNotification.setNotificationId(fetchedNotification.getNotificationId());
-            notificationRepository.save(newNotification);
-            response.put("message", "Notification updated");
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("notification",newNotification);
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> getNotifications() {
+    public ResponseEntity<?> getNotifications() {
         Map<String, Object> response = new HashMap<>();
-        List<Notification> notificationList= notificationRepository.findAll();
+        List<Notification> notificationList;
+        try {
+            notificationList = notificationRepository.findAll();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Notifications Fetched");
         response.put("notificationList",notificationList);
-        return response;
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
     @Override
-    public Map<String, Object> deleteNotification(Integer notificationId) {
+    public ResponseEntity<?> deleteNotification(Integer notificationId) {
         Map<String, Object> response = new HashMap<>();
-        notificationRepository.deleteUsingId(notificationId);
+        try{
+            notificationRepository.deleteUsingId(notificationId);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("message","Notification Deleted");
-        return response;
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

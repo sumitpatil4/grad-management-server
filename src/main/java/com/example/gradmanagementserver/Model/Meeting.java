@@ -54,8 +54,16 @@ public class Meeting {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trainer trainer;
 
-    @ManyToMany(mappedBy = "meetingList",cascade = CascadeType.REMOVE)
+//    @ManyToMany(mappedBy = "meetingList",cascade = CascadeType.REMOVE)
+//    @JsonIgnore
+//    @OnDelete(action = OnDeleteAction.CASCADE)
+//    private List<Batch> batchList;
+
+    @ManyToMany()
     @JsonIgnore
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinTable(
+            name = "meeting_batch",
+            joinColumns = @JoinColumn(name = "meetingId"),
+            inverseJoinColumns = @JoinColumn(name = "batchId"))
     private List<Batch> batchList;
 }

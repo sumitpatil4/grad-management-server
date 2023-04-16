@@ -28,41 +28,25 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/helloUser")
-    public String hello(){
-        return "hello";
-    }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestHeader("Authorization") String token){
-        Map<String,Object> response = userService.login(token);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String token){
+        return userService.login(token);
     }
 
     @GetMapping("/getUsers")
-    public ResponseEntity<Object> getUsers(){
-        Map<String,Object> response = userService.getUsers();
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<?> getUsers(){
+        return userService.getUsers();
     }
 
-//    @GetMapping("/getByRole/{role}")
-//    public ResponseEntity<?> getByRole(@PathVariable String role){
-//       List<User> userList = userRepository.findByRole(role);
-//       return new ResponseEntity<>(userList,HttpStatus.OK);
-//    }
+    @GetMapping("getUserById/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable String userId){
+        return userService.getUserById(userId);
+    }
 
     @PutMapping("/updateRole/{role}")
     @CrossOrigin(value = "**")
-    public ResponseEntity<Object> updateRole(@PathVariable String role,@RequestBody User user){
-        Map<String,Object> response = userService.updateRole(role,user);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<?> updateRole(@PathVariable String role,@RequestBody User user){
+        return userService.updateRole(role,user);
     }
-
-
-//    @DeleteMapping("/deleteUser")
-//    public ResponseEntity<?> deleteUser(@RequestBody User user){
-//        User newUser = userRepository.findById(user.getUserId()).get();
-//        userRepository.delete(user);
-//        return new ResponseEntity<>("Delete",HttpStatus.OK);
-//    }
 }

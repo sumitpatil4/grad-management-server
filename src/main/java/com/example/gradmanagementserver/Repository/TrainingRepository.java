@@ -13,11 +13,5 @@ import java.util.List;
 
 @Repository
 public interface TrainingRepository extends JpaRepository<Training,Integer> {
-
-    @Transactional
-    @Modifying
-    @Query("delete from Training t where t.trainingId =:trainingId")
-    public void deleteUsingId(@Param("trainingId") Integer trainingId);
-
     public List<Training> findByUser(User user);
 }

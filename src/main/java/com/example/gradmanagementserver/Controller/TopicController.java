@@ -18,34 +18,29 @@ public class TopicController {
 
     @PostMapping("/createTopic/{topicId}")
     public ResponseEntity<?> createTopic(@PathVariable Integer topicId, @RequestBody Topic topic){
-        Map<String,Object> response = topicService.createTopic(topicId,topic);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return topicService.createTopic(topicId,topic);
     }
 
     @GetMapping("getTopics/{trainingId}")
     public ResponseEntity<?> getTopics(@PathVariable Integer trainingId){
-        Map<String,Object> response = topicService.getTopics(trainingId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return topicService.getTopics(trainingId);
     }
 
     @PutMapping("/updateTopic/{trainingId}")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> updateTopic(@PathVariable Integer trainingId, @RequestBody Topic topic){
-        Map<String,Object> response = topicService.updateTopic(trainingId,topic);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return topicService.updateTopic(trainingId,topic);
     }
 
     @DeleteMapping("/deleteTopic/{topicId}")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> deleteTopic(@PathVariable Integer topicId){
-        Map<String,Object> response = topicService.deleteTopic(topicId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return topicService.deleteTopic(topicId);
     }
 
     @PutMapping("/updateCompleted/{topicId}/{flag}")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> updateCompleted(@PathVariable Integer topicId, @PathVariable Integer flag){
-        Map<String,Object> response = topicService.updateCompleted(topicId,flag);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return topicService.updateCompleted(topicId,flag);
     }
 }

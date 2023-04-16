@@ -1,17 +1,18 @@
 package com.example.gradmanagementserver.Service;
 
 import com.example.gradmanagementserver.Model.Topic;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 public interface TopicService {
-    public Map<String,Object> createTopic(Integer trainingId, Topic topic);
+    public ResponseEntity<?> createTopic(Integer trainingId, Topic topic);
 
-    public Map<String,Object> getTopics(Integer trainingId);
-    public Map<String,Object> updateTopic(Integer topicId, Topic topic);
+    public ResponseEntity<?> getTopics(Integer trainingId);
+    public ResponseEntity<?> updateTopic(Integer topicId, Topic topic);
 
-    public Map<String,Object> deleteTopic(Integer topicId);
-    public Map<String,Object> updateCompleted(Integer topicId, Integer flag);
+    public ResponseEntity<?> deleteTopic(Integer topicId);
+    public ResponseEntity<?> updateCompleted(Integer topicId, Integer flag);
 
 
 }

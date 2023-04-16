@@ -1,13 +1,16 @@
 package com.example.gradmanagementserver.Service;
 
 import com.example.gradmanagementserver.Model.User;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
 
 public interface UserService {
-    public Map<String,Object> login(String token);
+    public ResponseEntity<?> login(String token);
 
-    public Map<String,Object> getUsers();
+    public ResponseEntity<?> getUsers();
 
-    public Map<String,Object> updateRole(String role,User user);
+    public ResponseEntity<?> updateRole(String role,User user);
+
+    public ResponseEntity<?> getUserById(String userId);
 }

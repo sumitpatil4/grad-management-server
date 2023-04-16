@@ -18,27 +18,23 @@ public class TrainerController {
 
     @PostMapping("/createTrainer/{userId}")
     public ResponseEntity<?> createTrainer(@PathVariable String userId, @RequestBody Trainer trainer){
-        Map<String,Object> response = trainerService.createTrainer(userId,trainer);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return trainerService.createTrainer(userId,trainer);
     }
 
     @GetMapping("/getTrainersById/{userId}")
     public ResponseEntity<?> getTrainersById(@PathVariable String userId){
-        Map<String,Object> response = trainerService.getTrainerById(userId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return trainerService.getTrainerById(userId);
     }
 
     @PutMapping("/updateTrainer")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> updateTrainer(@RequestBody Trainer trainer){
-        Map<String,Object> response = trainerService.updateTrainer(trainer);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return trainerService.updateTrainer(trainer);
     }
 
     @DeleteMapping("/deleteTrainer/{trainerId}")
     @CrossOrigin(value = "**")
     public ResponseEntity<?> deleteTrainer(@PathVariable Integer trainerId){
-        Map<String,Object> response = trainerService.deleteTrainer(trainerId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return trainerService.deleteTrainer(trainerId);
     }
 }
