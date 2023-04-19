@@ -3,6 +3,7 @@ package com.example.gradmanagementserver.Model;
 import lombok.*;
 
 import java.sql.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,5 +12,5 @@ import java.sql.Date;
 @ToString
 public class TrainerDto {
     private Integer topicId;
-    private Date date;
+    private List<Date> dateList;
 }
