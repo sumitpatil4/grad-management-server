@@ -40,8 +40,7 @@ public class Trainer {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
-    @JsonIgnore
+    @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private List<Availability> availabilityList=new ArrayList<>();
 
     @OneToMany(mappedBy = "trainer",cascade = CascadeType.ALL)
@@ -55,5 +54,17 @@ public class Trainer {
         this.phoneNumber=phoneNumber;
         this.skill=skill;
         this.isActive=isActive;
+    }
+
+    public Trainer(Trainer t) {
+        this.trainerId=t.getTrainerId();
+        this.trainerName=t.getTrainerName();
+        this.email=t.getEmail();
+        this.phoneNumber=t.getPhoneNumber();
+        this.skill=t.getSkill();
+        this.isActive=t.isActive();
+        this.user=t.getUser();
+        this.meetingList=t.getMeetingList();
+        this.availabilityList=t.getAvailabilityList();
     }
 }

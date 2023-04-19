@@ -136,25 +136,30 @@ public class TrainerServiceImpl implements TrainerService {
     @Override
     public ResponseEntity<?> getTrainersByAvlAndSkill(String userId, TrainerDto trainerDto) {
         Map<String, Object> response = new HashMap<>();
+        Set<Object> result=new HashSet<>();
         User user;
         String topicName;
         Topic topic;
         List<Trainer> trainerList;
         List<Trainer> filteredList;
         List<Trainer> finalList = new ArrayList<>();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        List<String> dates = new ArrayList<>();
+        for(Date d : trainerDto.getDateList()){
+            dates.add(df.format(d));
+        }
         try {
             topic = topicRepository.findById(trainerDto.getTopicId()).get();
             topicName = topic.getTopicName();
             user = userRepository.findById(userId).get();
             trainerList = trainerRepository.findByUser(user);
+            //Trainers found by topic name
             filteredList = trainerList.stream().filter(trainer -> trainer.getSkill().equals(topicName)).collect(Collectors.toList());
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            String d1 = df.format(trainerDto.getDate());
             for (Trainer t : filteredList) {
                 List<Availability> availabilityList = t.getAvailabilityList();
                 for (Availability a : availabilityList) {
                     String d2 = df.format(a.getDate());
-                    if (d1.equals(d2)) {
+                    if (dates.contains(d2)) {
                         finalList.add(t);
                         break;
                     }
@@ -165,8 +170,29 @@ public class TrainerServiceImpl implements TrainerService {
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+        for(String d : dates) {
+            Map<String, Object> tempMap = new HashMap<>();
+            List<Trainer> trainerList1 = new ArrayList<>();
+            tempMap.put("date", d);
+
+            for (Trainer t : finalList) {
+                List<Availability> availabilityList = t.getAvailabilityList();
+                List<Availability> availabilityList1;
+                availabilityList1 = availabilityList.stream().filter(availability ->
+                     d.equals(df.format(availability.getDate()))
+                ).collect(Collectors.toList());
+                System.out.println(d+" "+t.getTrainerName()+" "+availabilityList1.size());
+                if(availabilityList1.size()!=0){
+                    Trainer tempTrainer = new Trainer(t);
+                    tempTrainer.setAvailabilityList(availabilityList1);
+                    trainerList1.add(tempTrainer);
+                }
+            }
+            tempMap.put("trainer",trainerList1);
+            result.add(tempMap);
+        }
         response.put("message", "Trainers Fetched");
-        response.put("trainers", finalList);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        response.put("trainers", result);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
