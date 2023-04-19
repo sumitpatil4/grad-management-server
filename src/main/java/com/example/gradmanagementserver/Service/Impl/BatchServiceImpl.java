@@ -1,11 +1,9 @@
 package com.example.gradmanagementserver.Service.Impl;
 
-import com.example.gradmanagementserver.Model.Batch;
-import com.example.gradmanagementserver.Model.InterListDto;
-import com.example.gradmanagementserver.Model.Intern;
-import com.example.gradmanagementserver.Model.Training;
+import com.example.gradmanagementserver.Model.*;
 import com.example.gradmanagementserver.Repository.BatchRepository;
 import com.example.gradmanagementserver.Repository.InternRepository;
+import com.example.gradmanagementserver.Repository.MeetingRepository;
 import com.example.gradmanagementserver.Repository.TrainingRepository;
 import com.example.gradmanagementserver.Service.BatchService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +29,9 @@ public class BatchServiceImpl implements BatchService {
 
     @Autowired
     private InternRepository internRepository;
+
+    @Autowired
+    private MeetingRepository meetingRepository;
 
     @Override
     public ResponseEntity<?> createBatch(Integer trainingId, Batch batch) {
@@ -154,6 +157,52 @@ public class BatchServiceImpl implements BatchService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("message","Intern Batch Deleted");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> checkBatchAvailability(Integer batchId, MeetingDto meetingDto) {
+        Map<String,Object> response = new HashMap<>();
+        List<Meeting> meetingList = new ArrayList<>();
+        Batch batch;
+        Training training;
+        Integer flag = 0;
+        try{
+            training = trainingRepository.findById(meetingDto.getTrainingId()).get();
+            batch = batchRepository.findById(batchId).get();
+            meetingList = batch.getMeetingList();
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            String d1 = df.format(meetingDto.getDate());
+            meetingList = meetingList.stream().filter(meeting -> df.format(meeting.getDate()).equals(d1)).collect(Collectors.toList());
+            for(Meeting m:meetingList){
+                int start1 = meetingDto.getFromTime().compareTo(m.getFromTime());
+                int start2 = meetingDto.getFromTime().compareTo(m.getToTime());
+                if(start1>=0 && start2<0){
+                    flag=1;
+                    break;
+                }
+                int end1 = meetingDto.getToTime().compareTo(m.getFromTime());
+                int end2 = meetingDto.getToTime().compareTo(m.getToTime());
+                if(end1>0 && end2<=0){
+                    flag=1;
+                    break;
+                }
+
+                int over1 = meetingDto.getFromTime().compareTo(m.getFromTime());
+                int over2 = meetingDto.getToTime().compareTo(m.getToTime());
+                if(over1<=0 && over2>=0){
+                    flag=1;
+                    break;
+                }
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("message","Possibility Check");
+        response.put("result",flag);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

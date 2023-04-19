@@ -1,5 +1,6 @@
 package com.example.gradmanagementserver.Repository;
 
+import com.example.gradmanagementserver.Model.Batch;
 import com.example.gradmanagementserver.Model.Meeting;
 import com.example.gradmanagementserver.Model.Training;
 import org.springframework.data.jpa.repository.JpaRepository;

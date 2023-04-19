@@ -2,6 +2,7 @@ package com.example.gradmanagementserver.Service;
 
 import com.example.gradmanagementserver.Model.Batch;
 import com.example.gradmanagementserver.Model.InterListDto;
+import com.example.gradmanagementserver.Model.MeetingDto;
 import com.example.gradmanagementserver.Model.Training;
 import org.springframework.http.ResponseEntity;
 
@@ -19,4 +20,5 @@ public interface BatchService {
     public ResponseEntity<?> getBatchById(Integer batchId);
     public ResponseEntity<?> updateInternBatch(Integer batchId, Integer defBatchId, InterListDto interListDto);
 
+    public ResponseEntity<?> checkBatchAvailability(Integer batchId,MeetingDto meetingDto);
 }
