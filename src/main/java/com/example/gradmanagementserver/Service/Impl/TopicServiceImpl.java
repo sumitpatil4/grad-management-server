@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService {
         try{
             training = trainingRepository.findById(trainingId).get();
             topicList = topicRepository.findByTopicName(topic.getTopicName());
-            filteredTopicList = topicList.stream().filter(topic1 -> topic1.isActive()).collect(Collectors.toList());
+            filteredTopicList = topicList.stream().filter(topic1 -> topic1.isActive() && topic1.getTraining().equals(training)).collect(Collectors.toList());
             if(filteredTopicList.size()!=0){
                 response.put("message","Topic Already Exists");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

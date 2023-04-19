@@ -43,7 +43,8 @@ public class MeetingServiceImpl implements MeetingService {
             topic = topicRepository.findById(meetingDto.getTopicId()).get();
             meeting =  new Meeting();
             meeting.setDate(meetingDto.getDate());
-            meeting.setTime(meetingDto.getTime());
+            meeting.setFromTime(meetingDto.getFromTime());
+            meeting.setToTime(meetingDto.getToTime());
             meeting.setMeetingDesc(meetingDto.getMeetingDesc());
             meeting.setMeetingLink(meetingDto.getMeetingLink());
             meeting.setFeedbackLink(meetingDto.getFeedbackLink());
@@ -110,7 +111,8 @@ public class MeetingServiceImpl implements MeetingService {
         try{
             meeting = meetingRepository.findById(meetingDto.getMeetingId()).get();
             meeting.setDate(meetingDto.getDate());
-            meeting.setTime(meetingDto.getTime());
+            meeting.setFromTime(meetingDto.getFromTime());
+            meeting.setToTime(meetingDto.getToTime());
             meeting.setMeetingDesc(meetingDto.getMeetingDesc());
             meeting.setMeetingLink(meetingDto.getMeetingLink());
             meeting.setFeedbackLink(meetingDto.getFeedbackLink());

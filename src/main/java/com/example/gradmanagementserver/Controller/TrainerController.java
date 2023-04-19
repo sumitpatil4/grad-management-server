@@ -1,6 +1,8 @@
 package com.example.gradmanagementserver.Controller;
 
+import com.example.gradmanagementserver.Model.MeetingDto;
 import com.example.gradmanagementserver.Model.Trainer;
+import com.example.gradmanagementserver.Model.TrainerDto;
 import com.example.gradmanagementserver.Service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,11 @@ public class TrainerController {
     @GetMapping("/getTrainersById/{userId}")
     public ResponseEntity<?> getTrainersById(@PathVariable String userId){
         return trainerService.getTrainerById(userId);
+    }
+
+    @PostMapping("/getTrainersByAvlAndSkill/{userId}")
+    public ResponseEntity<?> getTrainersByAvlAndSkill(@PathVariable String userId, @RequestBody TrainerDto trainerDto){
+        return trainerService.getTrainersByAvlAndSkill(userId,trainerDto);
     }
 
     @PutMapping("/updateTrainer")

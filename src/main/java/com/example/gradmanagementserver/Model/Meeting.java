@@ -27,8 +27,10 @@ public class Meeting {
     private String meetingDesc;
     @Column(name = "date")
     private Date date;
-    @Column(name = "time")
-    private Time time;
+    @Column(name = "fromTime")
+    private Time fromTime;
+    @Column(name = "toTime")
+    private Time toTime;
     @Column(name = "meetingLink")
     private String meetingLink;
     @Column(name = "feedbackLink")
@@ -36,31 +38,22 @@ public class Meeting {
     @Column(name = "assessmentLink")
     private String assessmentLink;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "topicId")
-    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Topic topic;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trainingId")
-    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trainerId")
-    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Trainer trainer;
 
-//    @ManyToMany(mappedBy = "meetingList",cascade = CascadeType.REMOVE)
-//    @JsonIgnore
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    private List<Batch> batchList;
-
-    @ManyToMany()
-    @JsonIgnore
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "meeting_batch",
             joinColumns = @JoinColumn(name = "meetingId"),

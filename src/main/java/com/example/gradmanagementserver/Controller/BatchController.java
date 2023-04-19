@@ -2,6 +2,7 @@ package com.example.gradmanagementserver.Controller;
 
 import com.example.gradmanagementserver.Model.Batch;
 import com.example.gradmanagementserver.Model.InterListDto;
+import com.example.gradmanagementserver.Model.MeetingDto;
 import com.example.gradmanagementserver.Service.BatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,5 +49,10 @@ public class BatchController {
     @CrossOrigin("**")
     public ResponseEntity<?> updateInternBatch(@PathVariable Integer batchId,@PathVariable Integer defBatchId, @RequestBody InterListDto interListDto) {
         return batchService.updateInternBatch(batchId, defBatchId, interListDto);
+    }
+
+    @PostMapping("/checkBatchAvailability/{batchId}")
+    public ResponseEntity<?> checkBatchAvailability(@PathVariable Integer batchId, @RequestBody MeetingDto meetingDto) {
+        return batchService.checkBatchAvailability(batchId,meetingDto);
     }
 }

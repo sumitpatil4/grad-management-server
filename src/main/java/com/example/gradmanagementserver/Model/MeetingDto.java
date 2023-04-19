@@ -19,7 +19,8 @@ public class MeetingDto {
     private int meetingId;
     private String meetingDesc;
     private Date date;
-    private Time time;
+    private Time fromTime;
+    private Time toTime;
     private String meetingLink;
     private String feedbackLink;
     private String assessmentLink;
