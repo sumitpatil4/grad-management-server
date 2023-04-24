@@ -33,4 +33,9 @@ public class MeetingController {
     public ResponseEntity<?> updateMeeting(@RequestBody MeetingDto meetingDto){
         return meetingService.updateMeeting(meetingDto);
     }
+
+    @GetMapping("/getMeetingsByIntern/{internId}")
+    public ResponseEntity<?> getMeetingsInterns(@PathVariable Integer internId){
+        return meetingService.getMeetingsInterns(internId);
+    }
 }

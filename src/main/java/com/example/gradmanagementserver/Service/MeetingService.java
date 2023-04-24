@@ -8,4 +8,6 @@ public interface MeetingService {
     public ResponseEntity<?> getMeetings(Integer meetingId);
     public ResponseEntity<?> deleteMeeting(Integer meetingId);
     public ResponseEntity<?> updateMeeting(MeetingDto meetingDto);
+
+    public ResponseEntity<?> getMeetingsInterns(Integer internId);
 }
