@@ -33,6 +33,7 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Autowired
     private AvailabilityRepository availabilityRepository;
+    private InternRepository internRepository;
     @Override
     public ResponseEntity<?> createMeeting(MeetingDto meetingDto) {
         Map<String,Object> response = new HashMap<>();
@@ -143,5 +144,25 @@ public class MeetingServiceImpl implements MeetingService {
         response.put("message","Meeting updated");
         response.put("meeting",meeting);
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getMeetingsInterns(Integer internId) {
+        Map<String,Object> response = new HashMap<>();
+        List<Meeting> meetingList;
+        System.out.println("Hello");
+        Intern intern;
+        try {
+            intern = internRepository.findById(internId).get();
+            meetingList = intern.getBatch().getMeetingList();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("message","Meetings Fetched");
+        response.put("meeting",meetingList);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 }

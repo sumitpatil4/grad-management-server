@@ -53,6 +53,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }
         Optional<User> user = userRepository.findById(userId);
+        //
         if(user.equals(Optional.empty())){
             User newUser = new User(
                     userId,
