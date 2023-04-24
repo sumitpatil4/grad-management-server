@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainingServiceImpl implements TrainingService {
@@ -33,19 +34,30 @@ public class TrainingServiceImpl implements TrainingService {
         Map<String, Object> response = new HashMap<>();
         User user;
         Training newTraining;
+        List<Training> trainingList;
+        List<Training> filteredTrainingList;
         Batch batch;
         try{
             user = userRepository.findById(userId).get();
-            newTraining = new Training();
-            newTraining.setTrainingId(training.getTrainingId());
-            newTraining.setTrainingName(training.getTrainingName());
-            newTraining.setUser(user);
-            trainingRepository.save(newTraining);
-            batch = new Batch();
-            batch.setBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId()));
-            batch.setTraining(newTraining);
-            batch.setActive(true);
-            batchRepository.save(batch);
+            trainingList = trainingRepository.findByUser(user);
+            filteredTrainingList = trainingList.stream().filter(training1 -> training1.isActive() && training1.getTrainingName().equalsIgnoreCase(training.getTrainingName())).collect(Collectors.toList());
+            if(filteredTrainingList.size()!=0){
+                response.put("message","Training Already exists");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            else{
+                newTraining = new Training();
+                newTraining.setTrainingId(training.getTrainingId());
+                newTraining.setTrainingName(training.getTrainingName());
+                newTraining.setActive(true);
+                newTraining.setUser(user);
+                trainingRepository.save(newTraining);
+                batch = new Batch();
+                batch.setBatchName(newTraining.getTrainingName()+"_"+Integer.toString(newTraining.getTrainingId()));
+                batch.setTraining(newTraining);
+                batch.setActive(true);
+                batchRepository.save(batch);
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -62,9 +74,11 @@ public class TrainingServiceImpl implements TrainingService {
         Map<String, Object> response = new HashMap<>();
         User user;
         List<Training> trainingsList;
+        List<Training> filteredTrainingsList;
         try{
             user = userRepository.findById(userId).get();
             trainingsList = trainingRepository.findByUser(user);
+            filteredTrainingsList = trainingsList.stream().filter(training -> training.isActive()).collect(Collectors.toList());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -72,7 +86,7 @@ public class TrainingServiceImpl implements TrainingService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("message","Trainings Fetched");
-        response.put("training",trainingsList);
+        response.put("training",filteredTrainingsList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -102,8 +116,11 @@ public class TrainingServiceImpl implements TrainingService {
     @Override
     public ResponseEntity<?> deleteTraining(Integer trainingId) {
         Map<String, Object> response = new HashMap<>();
+        Training training;
         try{
-            trainingRepository.deleteById(trainingId);
+            training=trainingRepository.findById(trainingId).get();
+            training.setActive(false);
+            trainingRepository.save(training);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -111,7 +128,7 @@ public class TrainingServiceImpl implements TrainingService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        response.put("message","Training Deleted");
+        response.put("message","Training set as Inactive");
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }

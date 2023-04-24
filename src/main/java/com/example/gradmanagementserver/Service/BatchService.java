@@ -16,6 +16,8 @@ public interface BatchService {
     public ResponseEntity<?> getBatches(Integer trainingId);
 
     public ResponseEntity<?> deleteBatch(Integer batchId);
+    public ResponseEntity<?> getInternsByBatch(Map<Object,Object> batchList);
+
 
     public ResponseEntity<?> getBatchById(Integer batchId);
     public ResponseEntity<?> updateInternBatch(Integer batchId, Integer defBatchId, InterListDto interListDto);

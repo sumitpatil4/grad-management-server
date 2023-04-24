@@ -25,6 +25,8 @@ public class Training {
     private int trainingId;
     @Column(name = "trainingName")
     private String trainingName;
+    @Column(name = "isActive")
+    private boolean isActive;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")

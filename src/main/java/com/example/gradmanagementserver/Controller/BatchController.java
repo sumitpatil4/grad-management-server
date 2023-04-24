@@ -55,4 +55,9 @@ public class BatchController {
     public ResponseEntity<?> checkBatchAvailability(@PathVariable Integer batchId, @RequestBody MeetingDto meetingDto) {
         return batchService.checkBatchAvailability(batchId,meetingDto);
     }
+
+    @PostMapping("/getInternsByBatch")
+    public ResponseEntity<?> getInternsByBatch(@RequestBody Map<Object,Object> batchList) {
+        return batchService.getInternsByBatch(batchList);
+    }
 }

@@ -33,18 +33,20 @@ public class TopicServiceImpl implements TopicService {
         List<Topic> filteredTopicList;
         try{
             training = trainingRepository.findById(trainingId).get();
-            topicList = topicRepository.findByTopicName(topic.getTopicName());
-            filteredTopicList = topicList.stream().filter(topic1 -> topic1.isActive() && topic1.getTraining().equals(training)).collect(Collectors.toList());
+            topicList = topicRepository.findByTraining(training);
+            filteredTopicList = topicList.stream().filter(topic1 ->topic1.isActive() && topic1.getTopicName().equalsIgnoreCase(topic.getTopicName())).collect(Collectors.toList());
             if(filteredTopicList.size()!=0){
                 response.put("message","Topic Already Exists");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
-            newTopic = new Topic();
-            newTopic.setTopicName(topic.getTopicName());
-            newTopic.setTraining(training);
-            newTopic.setCompleted(false);
-            newTopic.setActive(true);
-            topicRepository.save(newTopic);
+            else {
+                newTopic = new Topic();
+                newTopic.setTopicName(topic.getTopicName());
+                newTopic.setTraining(training);
+                newTopic.setCompleted(false);
+                newTopic.setActive(true);
+                topicRepository.save(newTopic);
+            }
         }
         catch(Exception e){
             e.printStackTrace();
@@ -54,7 +56,6 @@ public class TopicServiceImpl implements TopicService {
         response.put("message","Topic created");
         response.put("topic",newTopic);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @Override
@@ -62,9 +63,11 @@ public class TopicServiceImpl implements TopicService {
         Map<String,Object> response = new HashMap<>();
         Training training;
         List<Topic> topicList;
+        List<Topic> filteredTopicList;
         try{
             training = trainingRepository.findById(trainingId).get();
             topicList = topicRepository.findByTraining(training);
+            filteredTopicList = topicList.stream().filter(topic -> topic.isActive()).collect(Collectors.toList());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -72,7 +75,7 @@ public class TopicServiceImpl implements TopicService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("message","Topics Fetched");
-        response.put("topicList",topicList);
+        response.put("topicList",filteredTopicList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -128,9 +131,11 @@ public class TopicServiceImpl implements TopicService {
             topic = topicRepository.findById(topicId).get();
             if(flag==1){
                 topic.setCompleted(true);
+                response.put("message","Topic set as Complete");
             }
             else{
                 topic.setCompleted(false);
+                response.put("message","Topic set as Incomplete");
             }
             topicRepository.save(topic);
         }
@@ -139,7 +144,6 @@ public class TopicServiceImpl implements TopicService {
             response.put("message",e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        response.put("message","Topic Updated");
         response.put("topicList",topic);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
