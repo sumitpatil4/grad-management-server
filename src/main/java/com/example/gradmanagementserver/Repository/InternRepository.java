@@ -11,4 +11,6 @@ import java.util.List;
 public interface InternRepository extends JpaRepository<Intern,Integer> {
 
     public List<Intern> findByTraining(Training training);
+
+    public List<Intern> findByEmail(String email);
 }

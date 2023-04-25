@@ -33,6 +33,7 @@ public class MeetingServiceImpl implements MeetingService {
 
     @Autowired
     private AvailabilityRepository availabilityRepository;
+    @Autowired
     private InternRepository internRepository;
     @Override
     public ResponseEntity<?> createMeeting(MeetingDto meetingDto) {
@@ -150,7 +151,6 @@ public class MeetingServiceImpl implements MeetingService {
     public ResponseEntity<?> getMeetingsInterns(Integer internId) {
         Map<String,Object> response = new HashMap<>();
         List<Meeting> meetingList;
-        System.out.println("Hello");
         Intern intern;
         try {
             intern = internRepository.findById(internId).get();
