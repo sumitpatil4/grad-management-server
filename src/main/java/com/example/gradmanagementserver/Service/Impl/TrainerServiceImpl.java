@@ -5,10 +5,18 @@ import com.example.gradmanagementserver.Repository.TopicRepository;
 import com.example.gradmanagementserver.Repository.TrainerRepository;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.TrainerService;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+
+import java.io.*;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -18,12 +26,16 @@ import java.util.stream.Collectors;
 public class TrainerServiceImpl implements TrainerService {
 
     @Autowired
+    private JavaMailSender javaMailSender;
+
+    @Autowired
     private UserRepository userRepository;
     @Autowired
     private TrainerRepository trainerRepository;
 
     @Autowired
     private TopicRepository topicRepository;
+
     @Override
     public ResponseEntity<?> createTrainer(String userId, Trainer trainer) {
         Map<String,Object> response = new HashMap<>();
@@ -194,5 +206,38 @@ public class TrainerServiceImpl implements TrainerService {
         response.put("message", "Trainers Fetched");
         response.put("trainers", result);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> sendMails(MultipartFile file,String mailList) {
+        String[] mailString=mailList.split(",");
+        Map<String,Object> response = new HashMap<>();
+        try{
+            MimeMessage mimeMessage=javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,true);
+            mimeMessageHelper.setFrom("saikrupananda21@gmail.com");
+            mimeMessageHelper.setTo(mailString);
+            mimeMessageHelper.setSubject("Trainers Excel Sheet");
+            mimeMessageHelper.setText("The attached excel sheet contains details of all the trainers with their availability");
+
+            byte[] arr= file.getBytes();
+            File outputFile = new File("TrainerFile.xlsx");
+            OutputStream outputStream = new FileOutputStream(outputFile);
+            outputStream.write(arr);
+            outputStream.close();
+
+            FileSystemResource fileSystemResource= new FileSystemResource(outputFile);
+            System.out.println(fileSystemResource);
+            mimeMessageHelper.addAttachment("TrainersFile.xlsx",fileSystemResource);
+            javaMailSender.send(mimeMessage);
+            System.out.println("Mail with attachment sent successfully..");
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("message", "Sent Mails Successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

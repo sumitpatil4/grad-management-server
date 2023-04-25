@@ -9,6 +9,8 @@ import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,6 +20,10 @@ import java.util.Map;
 
 @Service
 public class NotificationServiceImpl implements NotificationService {
+
+    @Autowired
+    private JavaMailSender mailSender;
+
     @Autowired
     private UserRepository userRepository;
 
@@ -32,6 +38,19 @@ public class NotificationServiceImpl implements NotificationService {
         try{
             user = userRepository.findById(userId).get();
             fetchedNotification = notificationRepository.findByUser(user);
+
+            String subject= "Request From "+user.getUName()+" for "+notification.getRequestedRole();
+            String text="Hello Admin,\n\nHope This email finds you well.\n\n"+notification.getNotificationDesc()+"\n\n\nThanks & Regards,\n"+user.getUName()+"\n";
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("saikrupananda21@gmail.com");
+            message.setTo("saikrupananda2@gmail.com");
+            message.setSubject(subject);
+            message.setText(text);
+            message.setReplyTo(user.getEmail());
+            mailSender.send(message);
+
+            System.out.println("Mail Sent Successfully");
+
             if(fetchedNotification==null) {
                 newNotification = new Notification();
                 newNotification.setNotificationDesc(notification.getNotificationDesc());
