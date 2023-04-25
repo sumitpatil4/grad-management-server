@@ -37,6 +37,10 @@ public class Meeting {
     private String feedbackLink;
     @Column(name = "assessmentLink")
     private String assessmentLink;
+    @Column(name = "eventId")
+    private String eventId;
+    @Column(name = "availabilityUsed")
+    private Integer availabilityUsed;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "topicId")

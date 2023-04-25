@@ -53,15 +53,7 @@ public class TrainerServiceImpl implements TrainerService {
             else{
                 newTrainer = null;
             }
-            if(newTrainer!=null){
-                newTrainer.setActive(true);
-                newTrainer.setTrainerName(trainer.getTrainerName());
-                newTrainer.setSkill(trainer.getSkill());
-                newTrainer.setPhoneNumber(trainer.getPhoneNumber());
-                trainerRepository.save(newTrainer);
-                response.put("message","Trainer set as active");
-            }
-            else {
+            if(newTrainer==null){
                 newTrainer = newTrainer = new Trainer();
                 newTrainer.setActive(true);
                 newTrainer.setTrainerName(trainer.getTrainerName());
@@ -71,6 +63,18 @@ public class TrainerServiceImpl implements TrainerService {
                 newTrainer.setUser(user);
                 trainerRepository.save(newTrainer);
                 response.put("message", "Trainer created");
+            }
+            else if(newTrainer!=null && newTrainer.isActive()==false) {
+                newTrainer.setActive(true);
+                newTrainer.setTrainerName(trainer.getTrainerName());
+                newTrainer.setSkill(trainer.getSkill());
+                newTrainer.setPhoneNumber(trainer.getPhoneNumber());
+                trainerRepository.save(newTrainer);
+                response.put("message", "Trainer set as active");
+            }
+            else{
+                response.put("message","Trainer already exists");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
             }
         }
         catch(Exception e){
@@ -123,7 +127,6 @@ public class TrainerServiceImpl implements TrainerService {
         response.put("message","Updated Trainer");
         response.put("trainer",newTrainer);
         return new ResponseEntity<>(response, HttpStatus.OK);
-
     }
 
     @Override
@@ -166,10 +169,13 @@ public class TrainerServiceImpl implements TrainerService {
             user = userRepository.findById(userId).get();
             trainerList = trainerRepository.findByUser(user);
             //Trainers found by topic name
-            filteredList = trainerList.stream().filter(trainer -> trainer.getSkill().equals(topicName)).collect(Collectors.toList());
+            filteredList = trainerList.stream().filter(trainer ->trainer.isActive() && trainer.getSkill().equalsIgnoreCase(topicName)).collect(Collectors.toList());
             for (Trainer t : filteredList) {
                 List<Availability> availabilityList = t.getAvailabilityList();
                 for (Availability a : availabilityList) {
+                    if(a.isActive()==false){
+                        continue;
+                    }
                     String d2 = df.format(a.getDate());
                     if (dates.contains(d2)) {
                         finalList.add(t);
@@ -191,9 +197,9 @@ public class TrainerServiceImpl implements TrainerService {
                 List<Availability> availabilityList = t.getAvailabilityList();
                 List<Availability> availabilityList1;
                 availabilityList1 = availabilityList.stream().filter(availability ->
+                        availability.isActive() &&
                      d.equals(df.format(availability.getDate()))
                 ).collect(Collectors.toList());
-                System.out.println(d+" "+t.getTrainerName()+" "+availabilityList1.size());
                 if(availabilityList1.size()!=0){
                     Trainer tempTrainer = new Trainer(t);
                     tempTrainer.setAvailabilityList(availabilityList1);

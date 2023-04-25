@@ -13,4 +13,5 @@ public interface AvailabilityService {
     public ResponseEntity<?> deleteAvailability(Integer availabilityId);
 
     public ResponseEntity<?> updateAvailability(Integer availabilityId,Availability availability);
+    public ResponseEntity<?> updateAvailabilityStatus(Integer availabilityId, Integer flag);
 }

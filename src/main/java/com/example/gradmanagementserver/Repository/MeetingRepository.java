@@ -11,4 +11,5 @@ import java.util.List;
 @Repository
 public interface MeetingRepository extends JpaRepository<Meeting,Integer> {
     public List<Meeting> findByTraining(Training training);
+
 }

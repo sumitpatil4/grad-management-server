@@ -33,7 +33,6 @@ public class UserController {
     public ResponseEntity<?> login(@RequestHeader("Authorization") String token){
         return userService.login(token);
     }
-
     @GetMapping("/getUsers")
     public ResponseEntity<?> getUsers(){
         return userService.getUsers();

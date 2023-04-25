@@ -28,6 +28,8 @@ public class Availability {
     private Time fromTime;
     @Column(name = "toTime")
     private Time toTime;
+    @Column(name = "isActive")
+    private boolean isActive;
 
     @ManyToOne
     @JoinColumn(name = "trainerId")

@@ -12,4 +12,5 @@ public interface BatchRepository extends JpaRepository<Batch,Integer> {
 
     public List<Batch> findByBatchName(String name);
     public List<Batch> findByTraining(Training training);
+
 }

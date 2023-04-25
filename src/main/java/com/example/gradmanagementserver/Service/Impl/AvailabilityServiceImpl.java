@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class AvailabilityServiceImpl implements AvailabilityService {
@@ -36,6 +37,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             newAvailability.setFromTime(availability.getFromTime());
             newAvailability.setToTime(availability.getToTime());
             newAvailability.setTrainer(trainer);
+            newAvailability.setActive(true);
             availabilityRepository.save(newAvailability);
             response.put("message","Availability created");
         }
@@ -53,9 +55,11 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         Map<String,Object> response = new HashMap<>();
         Trainer trainer;
         List<Availability> availabilityList;
+        List<Availability> filteredAvailabilityList;
         try{
             trainer = trainerRepository.findById(trainerId).get();
             availabilityList = availabilityRepository.findByTrainer(trainer);
+            filteredAvailabilityList = availabilityList.stream().filter(availability -> availability.isActive()).collect(Collectors.toList());
         }
         catch(Exception e){
             e.printStackTrace();
@@ -63,7 +67,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("message","Availability Fetched");
-        response.put("availability",availabilityList);
+        response.put("availability",filteredAvailabilityList);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     }
@@ -74,7 +78,7 @@ public class AvailabilityServiceImpl implements AvailabilityService {
         Availability availability;
         try{
             availability = availabilityRepository.findById(availabilityId).get();
-            availabilityRepository.delete(availability);
+            availabilityRepository.deleteUsingId(availabilityId);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -82,6 +86,31 @@ public class AvailabilityServiceImpl implements AvailabilityService {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
         response.put("message","Availability Deleted");
+        response.put("availability",availability);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> updateAvailabilityStatus(Integer availabilityId, Integer flag) {
+        Map<String,Object> response = new HashMap<>();
+        Availability availability;
+        try{
+            availability = availabilityRepository.findById(availabilityId).get();
+            if(flag==1){
+                availability.setActive(true);
+                response.put("message","Availability set as active");
+            }
+            else{
+                availability.setActive(false);
+                response.put("message","Availability set as inactive");
+            }
+            availabilityRepository.save(availability);
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         response.put("availability",availability);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
