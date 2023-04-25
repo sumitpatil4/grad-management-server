@@ -37,14 +37,24 @@ public class BatchServiceImpl implements BatchService {
     public ResponseEntity<?> createBatch(Integer trainingId, Batch batch) {
         Map<String,Object> response = new HashMap<>();
         Training training;
+        List<Batch> batchList;
+        List<Batch> filteredBatchList;
         Batch batch1;
         try{
             training = trainingRepository.findById(trainingId).get();
-            batch1 = new Batch();
-            batch1.setBatchName(batch.getBatchName());
-            batch1.setTraining(training);
-            batch1.setActive(true);
-            batchRepository.save(batch1);
+            batchList = training.getBatchList();
+            filteredBatchList = batchList.stream().filter(batch2 -> batch2.getBatchName().equalsIgnoreCase(batch.getBatchName())).collect(Collectors.toList());
+            if(filteredBatchList.size()!=0){
+                response.put("message","Batch already exists");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            else{
+                batch1 = new Batch();
+                batch1.setBatchName(batch.getBatchName());
+                batch1.setTraining(training);
+                batch1.setActive(true);
+                batchRepository.save(batch1);
+            }
         }
         catch (Exception e){
             e.printStackTrace();
@@ -112,6 +122,28 @@ public class BatchServiceImpl implements BatchService {
         }
         response.put("message","Batch Deleted");
         response.put("batch",batch);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<?> getInternsByBatch(Map<Object,Object> batchList) {
+        Map<String,Object> response = new HashMap<>();
+        Batch batch;
+        List<Integer> integerList = (List)batchList.get("batchList");
+        List<Intern> internList=new ArrayList<>();
+        try{
+            for(Integer batchId : integerList){
+                batch = batchRepository.findById(batchId).get();
+                internList.addAll(batch.getInternList());
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            response.put("message",e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        response.put("message","Interns Fetched");
+        response.put("interns",internList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

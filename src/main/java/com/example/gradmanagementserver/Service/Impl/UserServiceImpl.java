@@ -1,8 +1,11 @@
 package com.example.gradmanagementserver.Service.Impl;
 
 import com.example.gradmanagementserver.Jwt.JwtTokenUtil;
+import com.example.gradmanagementserver.Model.Intern;
+import com.example.gradmanagementserver.Model.Meeting;
 import com.example.gradmanagementserver.Model.Notification;
 import com.example.gradmanagementserver.Model.User;
+import com.example.gradmanagementserver.Repository.InternRepository;
 import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -22,6 +25,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private InternRepository internRepository;
+
+    @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
     @Override
@@ -30,6 +36,7 @@ public class UserServiceImpl implements UserService {
         String uName;
         String email;
         String picture;
+        List<Intern> internList;
         Map<String,Object> response = new HashMap<>();
         Base64.Decoder decoder = Base64.getUrlDecoder();
         String[] chunks = token.split("\\.");
@@ -52,8 +59,19 @@ public class UserServiceImpl implements UserService {
             response.put("message","Invalid Token");
             return new ResponseEntity<>(response,HttpStatus.BAD_REQUEST);
         }
+        internList = internRepository.findByEmail(email);
+        if(internList.size()!=0){
+            User intern = new User();
+            intern.setRole("ROLE_INTERN");
+            intern.setEmail(email);
+            intern.setPicture(picture);
+            intern.setUName(uName);
+            intern.setUserId(String.valueOf(internList.get(0).getInternId()));
+            response.put("message","Intern Login!");
+            response.put("user",intern);
+            return new ResponseEntity<>(response,HttpStatus.OK);
+        }
         Optional<User> user = userRepository.findById(userId);
-        //
         if(user.equals(Optional.empty())){
             User newUser = new User(
                     userId,

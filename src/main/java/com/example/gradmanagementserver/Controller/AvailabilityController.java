@@ -37,4 +37,10 @@ public class AvailabilityController {
     public ResponseEntity<?> updateAvailability(@PathVariable Integer availabilityId, @RequestBody Availability availability){
         return availabilityService.updateAvailability(availabilityId,availability);
     }
+
+    @PutMapping("/updateAvailabilityStatus/{availabilityId}/{flag}")
+    @CrossOrigin(value = "**")
+    public ResponseEntity<?> updateAvailabilityStatus(@PathVariable Integer availabilityId,@PathVariable Integer flag){
+        return availabilityService.updateAvailabilityStatus(availabilityId,flag);
+    }
 }

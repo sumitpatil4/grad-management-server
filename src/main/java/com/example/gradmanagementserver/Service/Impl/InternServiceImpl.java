@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class InternServiceImpl implements InternService {
@@ -74,20 +75,30 @@ public class InternServiceImpl implements InternService {
         Training training;
         Batch batch;
         Intern newIntern;
+        List<Intern> internList;
+        List<Intern> filteredInternList;
         try{
             user = userRepository.findById(userId).get();
             training = trainingRepository.findById(trainingId).get();
-            String defBatchName = training.getTrainingName()+"_"+Integer.toString(trainingId);
-            batch = batchRepository.findByBatchName(defBatchName).get(0);
-            newIntern = new Intern();
-            newIntern.setInternId(intern.getInternId());
-            newIntern.setInternName(intern.getInternName());
-            newIntern.setEmail(intern.getEmail());
-            newIntern.setPhoneNumber(intern.getPhoneNumber());
-            newIntern.setBatch(batch);
-            newIntern.setTraining(training);
-            newIntern.setUser(user);
-            internRepository.save(newIntern);
+            internList = training.getInternList();
+            filteredInternList = internList.stream().filter(intern1 -> intern1.getEmail().equalsIgnoreCase(intern.getEmail())).collect(Collectors.toList());
+            if(filteredInternList.size()!=0){
+                response.put("message","Intern already exists");
+                return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            }
+            else{
+                String defBatchName = training.getTrainingName()+"_"+Integer.toString(trainingId);
+                batch = batchRepository.findByBatchName(defBatchName).get(0);
+                newIntern = new Intern();
+                newIntern.setInternId(intern.getInternId());
+                newIntern.setInternName(intern.getInternName());
+                newIntern.setEmail(intern.getEmail());
+                newIntern.setPhoneNumber(intern.getPhoneNumber());
+                newIntern.setBatch(batch);
+                newIntern.setTraining(training);
+                newIntern.setUser(user);
+                internRepository.save(newIntern);
+            }
         }
         catch(Exception e){
             e.printStackTrace();

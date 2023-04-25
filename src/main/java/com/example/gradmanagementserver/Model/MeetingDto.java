@@ -21,6 +21,7 @@ public class MeetingDto {
     private Date date;
     private Time fromTime;
     private Time toTime;
+    private String eventId;
     private String meetingLink;
     private String feedbackLink;
     private String assessmentLink;
@@ -28,4 +29,5 @@ public class MeetingDto {
     private Integer trainingId;
     private Integer trainerId;
     private List<Integer> batchList;
+    private Integer availabilityUsed;
 }
