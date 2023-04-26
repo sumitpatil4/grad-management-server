@@ -39,11 +39,12 @@ public class NotificationServiceImpl implements NotificationService {
             user = userRepository.findById(userId).get();
             fetchedNotification = notificationRepository.findByUser(user);
 
-            String subject= "Request From "+user.getUName()+" for "+notification.getRequestedRole();
+            String[] arr=notification.getRequestedRole().split("_");
+            String subject= "Request From "+user.getUName()+" for "+arr[1];
             String text="Hello Admin,\n\nHope This email finds you well.\n\n"+notification.getNotificationDesc()+"\n\n\nThanks & Regards,\n"+user.getUName()+"\n";
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom("saikrupananda21@gmail.com");
-            message.setTo("saikrupananda2@gmail.com");
+            message.setTo("sumit.patil@accolitedigital.com");
             message.setSubject(subject);
             message.setText(text);
             message.setReplyTo(user.getEmail());

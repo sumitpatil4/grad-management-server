@@ -6,6 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -41,4 +44,7 @@ public class Intern {
     @JoinColumn(name = "trainingId")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
+
+    @OneToMany(mappedBy = "intern",fetch = FetchType.EAGER)
+    private List<Attendance> attendanceList = new ArrayList<>();
 }
