@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +58,9 @@ public class InternServiceImpl implements InternService {
         try{
             training = trainingRepository.findById(trainingId).get();
             internList = internRepository.findByTraining(training);
+            for(Intern intern : internList){
+                intern.setAttendanceList(new ArrayList<>());
+            }
         }
         catch(Exception e){
             e.printStackTrace();

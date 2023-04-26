@@ -9,6 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -63,4 +64,8 @@ public class Meeting {
             joinColumns = @JoinColumn(name = "meetingId"),
             inverseJoinColumns = @JoinColumn(name = "batchId"))
     private List<Batch> batchList;
+
+    @OneToMany(mappedBy = "meeting",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Attendance> attendanceList = new ArrayList<>();
 }
