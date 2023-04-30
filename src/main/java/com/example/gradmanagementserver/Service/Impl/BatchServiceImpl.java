@@ -43,7 +43,7 @@ public class BatchServiceImpl implements BatchService {
         try{
             training = trainingRepository.findById(trainingId).get();
             batchList = training.getBatchList();
-            filteredBatchList = batchList.stream().filter(batch2 -> batch2.getBatchName().equalsIgnoreCase(batch.getBatchName())).collect(Collectors.toList());
+            filteredBatchList = batchList.stream().filter(batch2 -> batch2.isActive() && batch2.getBatchName().equalsIgnoreCase(batch.getBatchName())).collect(Collectors.toList());
             if(filteredBatchList.size()!=0){
                 response.put("message","Batch already exists");
                 return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
