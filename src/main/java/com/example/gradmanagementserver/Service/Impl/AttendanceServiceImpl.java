@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,8 +30,13 @@ public class AttendanceServiceImpl implements AttendanceService {
         Map<String,Object> response = new HashMap<>();
         Meeting meeting;
         Intern intern;
+        List<Attendance> attendanceList;
         try{
             meeting = meetingRepository.findById(meetingId).get();
+            attendanceList = attendanceRepository.findByMeeting(meeting);
+            for(Attendance a : attendanceList){
+                attendanceRepository.delete(a);
+            }
             for(int i=0;i<attendanceDto.getIdList().size();i++){
                 intern = internRepository.findById(attendanceDto.getIdList().get(i)).get();
                 boolean res = attendanceDto.getAttendanceList().get(i);

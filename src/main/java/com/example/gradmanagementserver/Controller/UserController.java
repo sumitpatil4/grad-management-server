@@ -34,6 +34,7 @@ public class UserController {
         return userService.login(token);
     }
     @GetMapping("/getUsers")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_LEADER')")
     public ResponseEntity<?> getUsers(){
         return userService.getUsers();
     }
@@ -45,6 +46,7 @@ public class UserController {
 
     @PutMapping("/updateRole/{role}")
     @CrossOrigin(value = "**")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<?> updateRole(@PathVariable String role,@RequestBody User user){
         return userService.updateRole(role,user);
     }
