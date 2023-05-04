@@ -6,4 +6,5 @@ import org.springframework.http.ResponseEntity;
 public interface ScoresService {
 
     public ResponseEntity<?> createScores(Integer topicId, ScoresDto scoresDto);
+    public ResponseEntity<?> getScores(Integer topicId);
 }

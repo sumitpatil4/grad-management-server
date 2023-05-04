@@ -47,4 +47,8 @@ public class Intern {
 
     @OneToMany(mappedBy = "intern",fetch = FetchType.EAGER)
     private List<Attendance> attendanceList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "intern")
+    @JsonIgnore
+    private List<Scores> scoresList = new ArrayList<>();
 }

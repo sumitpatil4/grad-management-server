@@ -4,7 +4,6 @@ import com.example.gradmanagementserver.Model.ScoresDto;
 import com.example.gradmanagementserver.Service.ScoresService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,8 +14,12 @@ public class ScoresController {
     private ScoresService scoresService;
 
     @PostMapping("createScores/{topicId}")
-    @PreAuthorize("hasRole('ROLE_MANAGER')")
     public ResponseEntity<?> createScores(@PathVariable Integer topicId, @RequestBody ScoresDto scoresDto){
         return scoresService.createScores(topicId, scoresDto);
+    }
+
+    @GetMapping("/getScores/{topicId}")
+    public ResponseEntity<?> getScores(@PathVariable Integer topicId){
+        return scoresService.getScores(topicId);
     }
 }

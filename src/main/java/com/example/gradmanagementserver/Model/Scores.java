@@ -30,9 +30,8 @@ public class Scores {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Topic topic;
 
-    @ManyToOne()
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "internId")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
     private Intern intern;
 }
