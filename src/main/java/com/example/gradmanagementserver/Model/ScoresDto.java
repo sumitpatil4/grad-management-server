@@ -12,5 +12,5 @@ import java.util.List;
 public class ScoresDto {
     private List<Integer> idList;
     private List<Integer> scoresList;
-    private List<Integer> totalScoreList;
+    private Integer totalScoreList;
 }
