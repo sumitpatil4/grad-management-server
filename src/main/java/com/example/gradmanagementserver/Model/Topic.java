@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
@@ -36,4 +37,8 @@ public class Topic {
     @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Meeting> meetingList;
+
+    @OneToMany(mappedBy = "topic",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Scores> scoresList = new ArrayList<>();
 }
