@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 
 import java.util.List;
 
@@ -21,17 +25,19 @@ public class Training {
     private int trainingId;
     @Column(name = "trainingName")
     private String trainingName;
+    @Column(name = "isActive")
+    private boolean isActive;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
-    @JsonBackReference
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
     @OneToMany(mappedBy = "training",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Batch> batchList;
 
-    @OneToMany(mappedBy = "training")
+    @OneToMany(mappedBy = "training",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Topic> topicList;
 

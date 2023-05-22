@@ -1,8 +1,11 @@
 package com.example.gradmanagementserver.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -21,6 +24,9 @@ public class Batch{
     @Column(name = "batchName")
     private String batchName;
 
+    @Column(name = "isActive")
+    private boolean isActive;
+
     @OneToMany(mappedBy = "batch",cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Intern> internList;
@@ -28,13 +34,10 @@ public class Batch{
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "trainingId")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Training training;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "batchList")
     @JsonIgnore
-    @JoinTable(
-            name = "batch_meeting",
-            joinColumns = @JoinColumn(name = "batchId"),
-            inverseJoinColumns = @JoinColumn(name = "meetingId"))
     private List<Meeting> meetingList ;
 }

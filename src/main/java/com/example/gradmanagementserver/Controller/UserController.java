@@ -1,7 +1,9 @@
 package com.example.gradmanagementserver.Controller;
 
+import com.example.gradmanagementserver.Exception.InvalidJwtException;
 import com.example.gradmanagementserver.Jwt.JwtTokenUtil;
 import com.example.gradmanagementserver.Model.User;
+import com.example.gradmanagementserver.Repository.UserRepository;
 import com.example.gradmanagementserver.Service.UserService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,14 +28,26 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/helloUser")
-    public String hello(){
-        return "hello";
-    }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestHeader("Authorization") String token){
-        Map<String,Object> response = userService.login(token);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String token){
+        return userService.login(token);
+    }
+    @GetMapping("/getUsers")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER') or hasRole('ROLE_LEADER')")
+    public ResponseEntity<?> getUsers(){
+        return userService.getUsers();
+    }
+
+    @GetMapping("getUserById/{userId}")
+    public ResponseEntity<?> getUserById(@PathVariable String userId){
+        return userService.getUserById(userId);
+    }
+
+    @PutMapping("/updateRole/{role}")
+    @CrossOrigin(value = "**")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> updateRole(@PathVariable String role,@RequestBody User user){
+        return userService.updateRole(role,user);
     }
 }
